@@ -12,7 +12,7 @@ TASK_TYPES = [str(i) for i in CheckerTaskType]
 def main():
     parser = argparse.ArgumentParser(description="Your friendly checker script")
     parser.add_argument('method', choices=TASK_TYPES,
-                           help='The Method, one of {} or "listen" to start checker service'.format(TASK_TYPES))
+                           help='One of {} '.format(TASK_TYPES))
     parser.add_argument("-A", '--checker_address', type=str, default="http://localhost",
                            help="The URL of the checker")                    
     parser.add_argument("-a", '--address', type=str, default="localhost",
