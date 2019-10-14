@@ -6,6 +6,7 @@ import jsons
 
 from enochecker_core import CheckerTaskType
 from enochecker_core import CheckerTaskMessage
+from enochecker_core import CheckerResultMessage
 
 TASK_TYPES = [str(i) for i in CheckerTaskType]
 
@@ -39,7 +40,6 @@ def main():
                                 "decide which flag to place.")
 
     ns = parser.parse_args(args=sys.argv[1:])
-    print(ns)
     msg = CheckerTaskMessage(ns.run_id,
         ns.method,
         ns.address,
@@ -51,4 +51,6 @@ def main():
         ns.round,
         ns.flag,
         ns.flag_idx)
-    print(requests.post(ns.checker_address, data=jsons.dumps(msg)))
+    result = requests.post(ns.checker_address, data=jsons.dumps(msg))
+    result_msg = jsons.loads(result.content, CheckerResultMessage)
+    print(result_msg.result)

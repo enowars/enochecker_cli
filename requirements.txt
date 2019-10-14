@@ -1,3 +1,4 @@
 argparse>=1.4
 requests>=2.20
 enochecker_core==0.0.1
+jsons>=1.0.0
