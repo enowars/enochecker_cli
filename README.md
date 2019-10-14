@@ -1,4 +1,5 @@
 # Enochecker CLI
+![](https://tokei.rs/b1/github/enowars/enochecker_cli)
 
 ## Usage
 `enochecker_cli -h`
