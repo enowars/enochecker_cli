@@ -8,7 +8,7 @@ with open("requirements.txt", "r") as f:
 
 setuptools.setup(
     name='enochecker_cli',  
-    version='0.1.1',
+    version='0.1.2',
     entry_points = {
         "console_scripts": ['enochecker_cli = enochecker_cli:main']
     },
