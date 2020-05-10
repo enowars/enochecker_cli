@@ -1,5 +1,4 @@
-# Enochecker CLI
-![](https://tokei.rs/b1/github/enowars/enochecker_cli)
+# Enochecker CLI ![](https://tokei.rs/b1/github/enowars/enochecker_cli)
 
 ## Usage
 ```
