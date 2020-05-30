@@ -51,6 +51,11 @@ def main():
         ns.round,
         ns.flag,
         ns.flag_idx)
-    result = requests.post(ns.checker_address, data=jsons.dumps(msg))
-    result_msg = jsons.loads(result.content, CheckerResultMessage)
-    print(result_msg.result)
+
+    result = requests.post(ns.checker_address, data=jsons.dumps(msg), headers = { 'content-type': 'application/json' })
+    if result.ok:
+        result_msg = jsons.loads(result.content, CheckerResultMessage)
+        print(result_msg.result)
+    else:
+        print(result.status_code)
+        print(result.text)
