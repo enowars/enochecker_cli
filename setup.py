@@ -7,10 +7,10 @@ with open("requirements.txt", "r") as f:
     requirements = f.read().splitlines()
 
 setuptools.setup(
-    name='enochecker_cli',  
+    name='enochecker_cli',
     version='0.4.0',
     entry_points = {
-        "console_scripts": ['enochecker_cli = enochecker_cli:main']
+        "console_scripts": ['enochecker_cli = enochecker_cli.base:main']
     },
     author="Benedikt Radtke",
     author_email="benediktradtke@gmail.com",
