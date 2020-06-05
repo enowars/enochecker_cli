@@ -6,7 +6,7 @@ lint:
 
 format:
 	python -m isort -rc enochecker_cli/
-	python -m black enochecker_cli/
+	python -m black --line-length 160 enochecker_cli/
 
 test:
 	pip install .
