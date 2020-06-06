@@ -49,5 +49,5 @@ steps:
     mkdir /tmp/test_sdist
     python setup.py sdist -d /tmp/test_sdist
     cd /tmp/test_sdist
-    pip install enochecker-*.tar.gz
+    pip install enochecker_cli-*.tar.gz
   displayName: 'test sdist'
