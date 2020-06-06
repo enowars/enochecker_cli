@@ -48,7 +48,7 @@ def task_message_from_namespace(ns: argparse.Namespace) -> CheckerTaskMessage:
 
 
 def json_task_message_from_namespace(ns: argparse.Namespace) -> str:
-    return jsons.dumps(task_message_from_namespace(ns))
+    return jsons.dumps(task_message_from_namespace(ns), key_transformer=jsons.KEY_TRANSFORMER_CAMELCASE)
 
 
 def main():
