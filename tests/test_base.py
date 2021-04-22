@@ -6,79 +6,65 @@ from enochecker_cli import get_parser, json_task_message_from_namespace
 def test_json_checker_message():
     argv = [
         "putflag",
-        "-a",
-        "localhost",
-        "-t",
-        "TestTeam",
-        "-I",
-        "1",
-        "-f",
-        "ENOTESTFLAG",
-        "-x",
-        "30",
         "-i",
-        "0",
-        "-R",
-        "500",
-        "-F",
-        "299",
+        "17",
+        "-a",
+        "example",
         "-T",
         "19",
+        "-t",
+        "TestTeam",
+        "-r",
+        "3",
+        "-R",
+        "2",
+        "-f",
+        "ENOTESTFLAG",
+        "-v",
+        "4",
+        "-x",
+        "15000",
+        "-l",
+        "50000",
     ]
 
     ns = get_parser().parse_args(argv)
     msg = json.loads(json_task_message_from_namespace(ns))
     for (key, val) in {
-        "runId": 1,
+        "taskId": 17,
         "method": "putflag",
-        "address": "localhost",
-        "serviceId": 0,
-        "serviceName": "",
+        "address": "example",
         "teamId": 19,
         "teamName": "TestTeam",
-        "roundId": 1,
-        "relatedRoundId": 299,
+        "currentRoundId": 3,
+        "relatedRoundId": 2,
         "flag": "ENOTESTFLAG",
-        "flagIndex": 0,
+        "variantId": 4,
+        "timeout": 15000,
+        "roundLength": 50000,
+        "taskChainId": "flag_s0_r2_t19_i4",
     }.items():
         assert key in msg
         assert msg[key] == val
 
 
 def test_json_checker_message_no_flag():
-    argv = [
-        "havoc",
-        "-a",
-        "localhost",
-        "-t",
-        "TestTeam",
-        "-I",
-        "1",
-        "-x",
-        "30",
-        "-i",
-        "0",
-        "-R",
-        "500",
-        "-F",
-        "299",
-        "-T",
-        "19",
-    ]
+    argv = ["havoc", "-i", "18", "-a", "example", "-T", "20", "-t", "TestTeam", "-r", "4", "-R", "3", "-v", "5", "-x", "16000", "-l", "51000"]
 
     ns = get_parser().parse_args(argv)
     msg = json.loads(json_task_message_from_namespace(ns))
     for (key, val) in {
-        "runId": 1,
+        "taskId": 18,
         "method": "havoc",
-        "address": "localhost",
-        "serviceId": 0,
-        "serviceName": "",
-        "teamId": 19,
+        "address": "example",
+        "teamId": 20,
         "teamName": "TestTeam",
-        "roundId": 1,
-        "relatedRoundId": 299,
-        "flagIndex": 0,
+        "currentRoundId": 4,
+        "relatedRoundId": 3,
+        "variantId": 5,
+        "timeout": 16000,
+        "roundLength": 51000,
+        "taskChainId": "havoc_s0_r3_t20_i5",
     }.items():
         assert key in msg
         assert msg[key] == val
