@@ -3,9 +3,9 @@ import sys
 
 import jsons
 import requests
-from enochecker_core import CheckerResultMessage, CheckerTaskMessage, CheckerTaskType
+from enochecker_core import CheckerMethod, CheckerResultMessage, CheckerTaskMessage
 
-TASK_TYPES = [str(i) for i in CheckerTaskType]
+TASK_TYPES = [str(i) for i in CheckerMethod]
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -48,17 +48,17 @@ def _get_parser(hide_checker_address=False) -> argparse.ArgumentParser:
 
 def task_message_from_namespace(ns: argparse.Namespace) -> CheckerTaskMessage:
     task_chain_id = ns.task_chain_id
-    method = CheckerTaskType(ns.method)
+    method = CheckerMethod(ns.method)
     if not task_chain_id:
         option = None
-        if method in (CheckerTaskType.CHECKER_TASK_TYPE_PUTFLAG, CheckerTaskType.CHECKER_TASK_TYPE_GETFLAG):
+        if method in (CheckerMethod.CHECKER_METHOD_PUTFLAG, CheckerMethod.CHECKER_METHOD_GETFLAG):
             option = "flag"
-        elif method in (CheckerTaskType.CHECKER_TASK_TYPE_PUTNOISE, CheckerTaskType.CHECKER_TASK_TYPE_GETNOISE):
+        elif method in (CheckerMethod.CHECKER_METHOD_PUTNOISE, CheckerMethod.CHECKER_METHOD_GETNOISE):
             option = "noise"
-        elif method == CheckerTaskType.CHECKER_TASK_TYPE_HAVOC:
+        elif method == CheckerMethod.CHECKER_METHOD_HAVOC:
             option = "havoc"
         else:
-            raise ValueError(f"Unexpected CheckerTaskType: {method}")
+            raise ValueError(f"Unexpected CheckerMethod: {method}")
         task_chain_id = f"{option}_s0_r{ns.related_round_id}_t{ns.team_id}_i{ns.variant_id}"
 
     msg = CheckerTaskMessage(
