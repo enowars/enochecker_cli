@@ -8,12 +8,11 @@ from enochecker_core import CheckerMethod, CheckerResultMessage, CheckerTaskMess
 TASK_TYPES = [str(i) for i in CheckerMethod]
 
 
-def get_parser() -> argparse.ArgumentParser:
-    return _get_parser(hide_checker_address=True)
+def add_arguments(parser: argparse.ArgumentParser) -> None:
+    _add_arguments(parser, hide_checker_address=True)
 
 
-def _get_parser(hide_checker_address=False) -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Your friendly checker script")
+def _add_arguments(parser: argparse.ArgumentParser, hide_checker_address=False) -> None:
     parser.add_argument("method", choices=TASK_TYPES, help="One of {} ".format(TASK_TYPES))
     if not hide_checker_address:
         parser.add_argument("-A", "--checker_address", type=str, default="http://localhost", help="The URL of the checker")
@@ -42,8 +41,6 @@ def _get_parser(hide_checker_address=False) -> argparse.ArgumentParser:
         default=None,
         help="A unique Id which must be identical for all related putflag/getflag calls and putnoise/getnoise calls",
     )
-
-    return parser
 
 
 def task_message_from_namespace(ns: argparse.Namespace) -> CheckerTaskMessage:
@@ -83,8 +80,10 @@ def json_task_message_from_namespace(ns: argparse.Namespace) -> str:
     return jsons.dumps(task_message_from_namespace(ns), use_enum_name=False, key_transformer=jsons.KEY_TRANSFORMER_CAMELCASE, strict=True)
 
 
-def main():
-    ns = _get_parser().parse_args(sys.argv[1:])
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Your friendly checker script")
+    _add_arguments(parser)
+    ns = parser.parse_args(sys.argv[1:])
     msg = json_task_message_from_namespace(ns)
 
     result = requests.post(ns.checker_address, data=msg, headers={"content-type": "application/json"},)

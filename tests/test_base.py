@@ -1,6 +1,7 @@
+import argparse
 import json
 
-from enochecker_cli import get_parser, json_task_message_from_namespace
+from enochecker_cli import add_arguments, json_task_message_from_namespace
 
 
 def test_json_checker_message():
@@ -28,7 +29,10 @@ def test_json_checker_message():
         "50000",
     ]
 
-    ns = get_parser().parse_args(argv)
+    parser = argparse.ArgumentParser(description="Your friendly checker script")
+    add_arguments(parser)
+
+    ns = parser.parse_args(argv)
     msg = json.loads(json_task_message_from_namespace(ns))
     for (key, val) in {
         "taskId": 17,
@@ -51,7 +55,10 @@ def test_json_checker_message():
 def test_json_checker_message_no_flag():
     argv = ["havoc", "-i", "18", "-a", "example", "-T", "20", "-t", "TestTeam", "-r", "4", "-R", "3", "-v", "5", "-x", "16000", "-l", "51000"]
 
-    ns = get_parser().parse_args(argv)
+    parser = argparse.ArgumentParser(description="Your friendly checker script")
+    add_arguments(parser)
+
+    ns = parser.parse_args(argv)
     msg = json.loads(json_task_message_from_namespace(ns))
     for (key, val) in {
         "taskId": 18,
