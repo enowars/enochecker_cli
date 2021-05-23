@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import sys
 
 import jsons
@@ -28,7 +29,7 @@ def _add_arguments(parser: argparse.ArgumentParser, hide_checker_address=False) 
         default=1,
         help="The round in which the flag or noise was stored when method is getflag/getnoise. Equal to current_round_id otherwise.",
     )
-    parser.add_argument("-f", "--flag", type=str, default="ENOFLAGENOFLAG=", help="The Flag, a Fake flag or a Unique ID, depending on the mode")
+    parser.add_argument("-f", "--flag", type=str, default="ENOFLAGENOFLAG=", help="The flag for putflag/getflag or the flag to find in exploit mode")
     parser.add_argument("-v", "--variant_id", type=int, default=0, help="The variantId for the method being called")
     parser.add_argument(
         "-x", "--timeout", type=int, default=30000, help="The maximum amount of time the script has to execute in milliseconds (default 30 000)"
@@ -41,6 +42,10 @@ def _add_arguments(parser: argparse.ArgumentParser, hide_checker_address=False) 
         default=None,
         help="A unique Id which must be identical for all related putflag/getflag calls and putnoise/getnoise calls",
     )
+    parser.add_argument("--flag_regex", type=str, default=None, help="A regular expression matched by the flag, used only when running the exploit method")
+    parser.add_argument(
+        "--attack_info", type=str, default=None, help="The attack info returned by the corresponding putflag, used only when running the exploit method"
+    )
 
 
 def task_message_from_namespace(ns: argparse.Namespace) -> CheckerTaskMessage:
@@ -48,15 +53,21 @@ def task_message_from_namespace(ns: argparse.Namespace) -> CheckerTaskMessage:
     method = CheckerMethod(ns.method)
     if not task_chain_id:
         option = None
-        if method in (CheckerMethod.CHECKER_METHOD_PUTFLAG, CheckerMethod.CHECKER_METHOD_GETFLAG):
+        if method in (CheckerMethod.PUTFLAG, CheckerMethod.GETFLAG):
             option = "flag"
-        elif method in (CheckerMethod.CHECKER_METHOD_PUTNOISE, CheckerMethod.CHECKER_METHOD_GETNOISE):
+        elif method in (CheckerMethod.PUTNOISE, CheckerMethod.GETNOISE):
             option = "noise"
-        elif method == CheckerMethod.CHECKER_METHOD_HAVOC:
+        elif method == CheckerMethod.HAVOC:
             option = "havoc"
+        elif method == CheckerMethod.EXPLOIT:
+            option = "exploit"
         else:
             raise ValueError(f"Unexpected CheckerMethod: {method}")
         task_chain_id = f"{option}_s0_r{ns.related_round_id}_t{ns.team_id}_i{ns.variant_id}"
+
+    flag_hash = None
+    if method == CheckerMethod.EXPLOIT:
+        flag_hash = hashlib.sha256(ns.flag.encode()).hexdigest()
 
     msg = CheckerTaskMessage(
         task_id=ns.task_id,
@@ -66,11 +77,14 @@ def task_message_from_namespace(ns: argparse.Namespace) -> CheckerTaskMessage:
         team_name=ns.team_name,
         current_round_id=ns.current_round_id,
         related_round_id=ns.related_round_id,
-        flag=ns.flag,
+        flag=ns.flag if method != CheckerMethod.EXPLOIT else None,
         variant_id=ns.variant_id,
         timeout=ns.timeout,
         round_length=ns.round_length,
         task_chain_id=task_chain_id,
+        flag_regex=ns.flag_regex,
+        flag_hash=flag_hash,
+        attack_info=ns.attack_info,
     )
 
     return msg
