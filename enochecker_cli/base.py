@@ -100,7 +100,11 @@ def main() -> None:
     ns = parser.parse_args(sys.argv[1:])
     msg = json_task_message_from_namespace(ns)
 
-    result = requests.post(ns.checker_address, data=msg, headers={"content-type": "application/json"},)
+    result = requests.post(
+        ns.checker_address,
+        data=msg,
+        headers={"content-type": "application/json"},
+    )
     if result.ok:
         result_msg = jsons.loads(result.content, CheckerResultMessage)
         print(result_msg.result)

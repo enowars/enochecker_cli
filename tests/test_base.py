@@ -34,7 +34,7 @@ def test_json_checker_message():
 
     ns = parser.parse_args(argv)
     msg = json.loads(json_task_message_from_namespace(ns))
-    for (key, val) in {
+    for key, val in {
         "taskId": 17,
         "method": "putflag",
         "address": "example",
@@ -60,7 +60,7 @@ def test_json_checker_message_no_flag():
 
     ns = parser.parse_args(argv)
     msg = json.loads(json_task_message_from_namespace(ns))
-    for (key, val) in {
+    for key, val in {
         "taskId": 18,
         "method": "havoc",
         "address": "example",
